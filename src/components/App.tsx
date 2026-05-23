@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box } from 'ink';
 import { useGame } from '../state/GameContext.js';
+import { Screen } from '../types/index.js';
 import { WelcomeScreen } from './WelcomeScreen.js';
 import { CategoryScreen } from './CategoryScreen.js';
 import { ChallengeSelectScreen } from './ChallengeSelectScreen.js';
@@ -12,11 +13,11 @@ export function App() {
 
   return (
     <Box flexDirection="column" padding={1}>
-      {state.screen === 'welcome' && <WelcomeScreen />}
-      {state.screen === 'category' && <CategoryScreen />}
-      {state.screen === 'challenge-select' && <ChallengeSelectScreen />}
-      {state.screen === 'challenge' && <ChallengeScreen />}
-      {state.screen === 'result' && <ResultScreen />}
+      {state.screen === Screen.WELCOME && <WelcomeScreen />}
+      {state.screen === Screen.CATEGORY && <CategoryScreen />}
+      {state.screen === Screen.CHALLENGE_SELECT && <ChallengeSelectScreen />}
+      {state.screen === Screen.CHALLENGE && <ChallengeScreen />}
+      {state.screen === Screen.RESULT && <ResultScreen />}
     </Box>
   );
 }

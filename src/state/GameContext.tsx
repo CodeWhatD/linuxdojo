@@ -2,7 +2,7 @@ import React, { createContext, useContext, useReducer } from 'react';
 import { createRoot } from '../engine/filesystem.js';
 import { getChallengesByCategory } from '../challenges/index.js';
 import { loadProgress, saveProgress, SaveData } from '../utils/storage.js';
-import { GameState, GameAction, GameActionType, ChallengeScore } from '../types/index.js';
+import { GameState, GameAction, GameActionType, Screen, ChallengeScore } from '../types/index.js';
 
 /** 启动时从存档文件恢复已完成关卡和评分 */
 function loadInitialState(): GameState {
@@ -13,7 +13,7 @@ function loadInitialState(): GameState {
     scores.set(id, { challengeId: id, ...entry });
   }
   return {
-    screen: 'welcome',
+    screen: Screen.WELCOME,
     selectedCategory: null,
     currentChallengeIndex: 0,
     completedChallenges,
@@ -33,15 +33,15 @@ const initialState = loadInitialState();
 function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case GameActionType.GO_HOME:
-      return { ...state, screen: 'welcome', selectedCategory: null, lastCorrect: null, lastMessage: '' };
+      return { ...state, screen: Screen.WELCOME, selectedCategory: null, lastCorrect: null, lastMessage: '' };
 
     case GameActionType.GO_CATEGORY:
-      return { ...state, screen: 'category' };
+      return { ...state, screen: Screen.CATEGORY };
 
     case GameActionType.GO_CHALLENGE_LIST:
       return {
         ...state,
-        screen: 'challenge-select',
+        screen: Screen.CHALLENGE_SELECT,
         hintIndex: 0,
         attempts: 0,
         lastCorrect: null,
@@ -51,7 +51,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case GameActionType.SELECT_CATEGORY:
       return {
         ...state,
-        screen: 'challenge-select',
+        screen: Screen.CHALLENGE_SELECT,
         selectedCategory: action.category,
         currentChallengeIndex: 0,
         hintIndex: 0,
@@ -66,7 +66,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case GameActionType.SELECT_CHALLENGE:
       return {
         ...state,
-        screen: 'challenge',
+        screen: Screen.CHALLENGE,
         currentChallengeIndex: action.index,
         hintIndex: 0,
         attempts: 0,
@@ -97,7 +97,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 
         return {
           ...state,
-          screen: 'result',
+          screen: Screen.RESULT,
           attempts: newAttempts,
           lastOutput: action.stdout,
           lastError: action.stderr,
@@ -123,7 +123,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case GameActionType.NEXT_CHALLENGE:
       return {
         ...state,
-        screen: 'challenge-select',
+        screen: Screen.CHALLENGE_SELECT,
         currentChallengeIndex: state.currentChallengeIndex + 1,
         hintIndex: 0,
         attempts: 0,
@@ -149,7 +149,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case GameActionType.RETRY_CHALLENGE:
       return {
         ...state,
-        screen: 'challenge',
+        screen: Screen.CHALLENGE,
         hintIndex: 0,
         attempts: 0,
         currentFs: createRoot(),

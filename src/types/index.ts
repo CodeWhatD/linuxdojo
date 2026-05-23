@@ -54,7 +54,13 @@ export enum GameActionType {
   GO_CHALLENGE_LIST = 'GO_CHALLENGE_LIST',
 }
 
-export type Screen = 'welcome' | 'category' | 'challenge-select' | 'challenge' | 'result';
+export enum Screen {
+  WELCOME = 'welcome',
+  CATEGORY = 'category',
+  CHALLENGE_SELECT = 'challenge-select',
+  CHALLENGE = 'challenge',
+  RESULT = 'result',
+}
 
 export interface ChallengeScore {
   challengeId: string;
