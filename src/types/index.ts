@@ -52,6 +52,8 @@ export enum GameActionType {
   RESET_CHALLENGE = 'RESET_CHALLENGE',
   RETRY_CHALLENGE = 'RETRY_CHALLENGE',
   GO_CHALLENGE_LIST = 'GO_CHALLENGE_LIST',
+  OPEN_LANG_SELECT = 'OPEN_LANG_SELECT',
+  CLOSE_LANG_SELECT = 'CLOSE_LANG_SELECT',
 }
 
 export enum Screen {
@@ -60,6 +62,7 @@ export enum Screen {
   CHALLENGE_SELECT = 'challenge-select',
   CHALLENGE = 'challenge',
   RESULT = 'result',
+  LANGUAGE_SELECT = 'language-select',
 }
 
 export interface ChallengeScore {
@@ -71,6 +74,7 @@ export interface ChallengeScore {
 
 export interface GameState {
   screen: Screen;
+  previousScreen: Screen;
   selectedCategory: import('./challenge').ChallengeCategory | null;
   currentChallengeIndex: number;
   completedChallenges: Set<string>;
@@ -94,4 +98,6 @@ export type GameAction =
   | { type: GameActionType.NEXT_CHALLENGE }
   | { type: GameActionType.RESET_CHALLENGE }
   | { type: GameActionType.RETRY_CHALLENGE }
-  | { type: GameActionType.GO_CHALLENGE_LIST };
+  | { type: GameActionType.GO_CHALLENGE_LIST }
+  | { type: GameActionType.OPEN_LANG_SELECT }
+  | { type: GameActionType.CLOSE_LANG_SELECT };

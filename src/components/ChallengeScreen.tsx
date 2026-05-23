@@ -15,7 +15,7 @@ import { getChallengeText, getChallengeHints } from '../i18n/index.js';
 
 export function ChallengeScreen() {
   const { state, dispatch } = useGame();
-  const { t, toggleLocale } = useLocale();
+  const { t } = useLocale();
   const [input, setInput] = useState('');
   const [outputLines, setOutputLines] = useState<string[]>([]);
 
@@ -55,10 +55,6 @@ export function ChallengeScreen() {
     }
     if (trimmed === ':back' || trimmed === ':b') {
       dispatch({ type: GameActionType.GO_CHALLENGE_LIST });
-      return;
-    }
-    if (trimmed === ':lang' || trimmed === ':l') {
-      toggleLocale();
       return;
     }
 

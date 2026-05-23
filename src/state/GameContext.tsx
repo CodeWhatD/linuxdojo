@@ -14,6 +14,7 @@ function loadInitialState(): GameState {
   }
   return {
     screen: Screen.WELCOME,
+    previousScreen: Screen.WELCOME,
     selectedCategory: null,
     currentChallengeIndex: 0,
     completedChallenges,
@@ -157,6 +158,19 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         lastError: '',
         lastCorrect: null,
         lastMessage: '',
+      };
+
+    case GameActionType.OPEN_LANG_SELECT:
+      return {
+        ...state,
+        previousScreen: state.screen,
+        screen: Screen.LANGUAGE_SELECT,
+      };
+
+    case GameActionType.CLOSE_LANG_SELECT:
+      return {
+        ...state,
+        screen: state.previousScreen,
       };
 
     default:

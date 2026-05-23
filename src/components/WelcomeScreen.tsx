@@ -8,22 +8,16 @@ import { useLocale } from '../i18n/LocaleContext.js';
 
 export function WelcomeScreen() {
   const { dispatch } = useGame();
-  const { t, locale, toggleLocale } = useLocale();
+  const { t } = useLocale();
   const [input, setInput] = useState('');
 
   const handleSubmit = useCallback((value: string) => {
     const trimmed = value.trim().toLowerCase();
     setInput('');
-    if (trimmed === ':lang' || trimmed === ':l') {
-      toggleLocale();
-      return;
-    }
     if (trimmed === '' || trimmed === 'start' || trimmed === 's') {
       dispatch({ type: GameActionType.GO_CATEGORY });
     }
-  }, [dispatch, toggleLocale]);
-
-  const langLabel = locale === 'zh' ? '中文' : 'English';
+  }, [dispatch]);
 
   return (
     <Box flexDirection="column" alignItems="center">
@@ -64,7 +58,7 @@ export function WelcomeScreen() {
       </Box>
 
       <Box marginTop={1}>
-        <Text dimColor>:lang ({langLabel})</Text>
+        <Text dimColor>Ctrl+Shift+L — Language / 语言</Text>
       </Box>
     </Box>
   );
