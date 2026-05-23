@@ -2,7 +2,7 @@ import React, { createContext, useContext, useReducer } from 'react';
 import { createRoot } from '../engine/filesystem.js';
 import { getChallengesByCategory } from '../challenges/index.js';
 import { loadProgress, saveProgress, SaveData } from '../utils/storage.js';
-import { GameState, GameAction, ChallengeScore } from '../types/index.js';
+import { GameState, GameAction, GameActionType, ChallengeScore } from '../types/index.js';
 
 /** 启动时从存档文件恢复已完成关卡和评分 */
 function loadInitialState(): GameState {
@@ -32,13 +32,13 @@ const initialState = loadInitialState();
 
 function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
-    case 'GO_HOME':
+    case GameActionType.GO_HOME:
       return { ...state, screen: 'welcome', selectedCategory: null, lastCorrect: null, lastMessage: '' };
 
-    case 'GO_CATEGORY':
+    case GameActionType.GO_CATEGORY:
       return { ...state, screen: 'category' };
 
-    case 'GO_CHALLENGE_LIST':
+    case GameActionType.GO_CHALLENGE_LIST:
       return {
         ...state,
         screen: 'challenge-select',
@@ -48,7 +48,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         lastMessage: '',
       };
 
-    case 'SELECT_CATEGORY':
+    case GameActionType.SELECT_CATEGORY:
       return {
         ...state,
         screen: 'challenge-select',
@@ -63,7 +63,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         lastMessage: '',
       };
 
-    case 'SELECT_CHALLENGE':
+    case GameActionType.SELECT_CHALLENGE:
       return {
         ...state,
         screen: 'challenge',
@@ -77,7 +77,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         lastMessage: '',
       };
 
-    case 'SUBMIT_RESULT': {
+    case GameActionType.SUBMIT_RESULT: {
       const newAttempts = state.attempts + 1;
       if (action.correct) {
         const challengeId = getCurrentChallengeId(state);
@@ -117,10 +117,10 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
-    case 'SHOW_HINT':
+    case GameActionType.SHOW_HINT:
       return { ...state, hintIndex: state.hintIndex + 1 };
 
-    case 'NEXT_CHALLENGE':
+    case GameActionType.NEXT_CHALLENGE:
       return {
         ...state,
         screen: 'challenge-select',
@@ -134,7 +134,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         lastMessage: '',
       };
 
-    case 'RESET_CHALLENGE':
+    case GameActionType.RESET_CHALLENGE:
       return {
         ...state,
         hintIndex: 0,
@@ -146,8 +146,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         lastMessage: '',
       };
 
-    case 'RETRY_CHALLENGE':
-      // 重玩当前关卡（不推进 index）
+    case GameActionType.RETRY_CHALLENGE:
       return {
         ...state,
         screen: 'challenge',

@@ -3,6 +3,7 @@ import { Box, Text, useInput } from 'ink';
 import { useGame } from '../state/GameContext.js';
 import { getChallengesByCategory } from '../challenges/index.js';
 import { CATEGORY_META } from '../types/challenge.js';
+import { GameActionType } from '../types/index.js';
 
 export function ChallengeSelectScreen() {
   const { state, dispatch } = useGame();
@@ -21,9 +22,9 @@ export function ChallengeSelectScreen() {
     } else if (key.downArrow) {
       setSelectedIndex(prev => (prev < challenges.length - 1 ? prev + 1 : prev));
     } else if (key.return) {
-      dispatch({ type: 'SELECT_CHALLENGE', index: selectedIndex });
+      dispatch({ type: GameActionType.SELECT_CHALLENGE, index: selectedIndex });
     } else if (key.escape) {
-      dispatch({ type: 'GO_CATEGORY' });
+      dispatch({ type: GameActionType.GO_CATEGORY });
     }
   });
 

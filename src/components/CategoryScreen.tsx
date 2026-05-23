@@ -4,6 +4,7 @@ import TextInput from 'ink-text-input';
 import { useGame } from '../state/GameContext.js';
 import { categories, getChallengesByCategory } from '../challenges/index.js';
 import { CATEGORY_META } from '../types/challenge.js';
+import { GameActionType } from '../types/index.js';
 
 export function CategoryScreen() {
   const { state, dispatch } = useGame();
@@ -15,7 +16,7 @@ export function CategoryScreen() {
 
     const num = parseInt(trimmed, 10);
     if (num >= 1 && num <= categories.length) {
-      dispatch({ type: 'SELECT_CATEGORY', category: categories[num - 1] });
+      dispatch({ type: GameActionType.SELECT_CATEGORY, category: categories[num - 1] });
     }
   }, [dispatch]);
 

@@ -3,6 +3,7 @@ import { Box, Text } from 'ink';
 import { useGame } from '../state/GameContext.js';
 import { getChallengesByCategory } from '../challenges/index.js';
 import { CATEGORY_META } from '../types/challenge.js';
+import { GameActionType } from '../types/index.js';
 import { execute } from '../engine/executor.js';
 import { validateChallenge } from '../engine/validator.js';
 import { createRoot } from '../engine/filesystem.js';
@@ -39,17 +40,17 @@ export function ChallengeScreen() {
 
     if (trimmed === ':hint' || trimmed === ':h') {
       if (state.hintIndex < challenge.hints.length) {
-        dispatch({ type: 'SHOW_HINT' });
+        dispatch({ type: GameActionType.SHOW_HINT });
       }
       return;
     }
     if (trimmed === ':reset' || trimmed === ':r') {
-      dispatch({ type: 'RESET_CHALLENGE' });
+      dispatch({ type: GameActionType.RESET_CHALLENGE });
       setOutputLines([]);
       return;
     }
     if (trimmed === ':back' || trimmed === ':b') {
-      dispatch({ type: 'GO_CHALLENGE_LIST' });
+      dispatch({ type: GameActionType.GO_CHALLENGE_LIST });
       return;
     }
 
@@ -65,7 +66,7 @@ export function ChallengeScreen() {
     setOutputLines(prev => [...prev, ...newLines]);
 
     dispatch({
-      type: 'SUBMIT_RESULT',
+      type: GameActionType.SUBMIT_RESULT,
       correct: validation.correct,
       message: validation.message,
       stdout: result.stdout,

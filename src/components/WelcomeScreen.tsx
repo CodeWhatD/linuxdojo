@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Box, Text } from 'ink';
 import TextInput from 'ink-text-input';
 import { useGame } from '../state/GameContext.js';
+import { GameActionType } from '../types/index.js';
 import { getSaveFilePath } from '../utils/storage.js';
 
 export function WelcomeScreen() {
@@ -12,7 +13,7 @@ export function WelcomeScreen() {
     const trimmed = value.trim().toLowerCase();
     setInput('');
     if (trimmed === '' || trimmed === 'start' || trimmed === 's') {
-      dispatch({ type: 'GO_CATEGORY' });
+      dispatch({ type: GameActionType.GO_CATEGORY });
     }
   }, [dispatch]);
 

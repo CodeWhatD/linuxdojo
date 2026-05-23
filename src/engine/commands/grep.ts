@@ -1,5 +1,5 @@
 import { CommandResult, ParsedCommand, VirtualFS } from '../../types/index.js';
-import { readFile, resolvePath } from '../filesystem.js';
+import { readFile } from '../filesystem.js';
 
 export function grep(fs: VirtualFS, parsed: ParsedCommand, stdin = ''): CommandResult {
   const pattern = parsed.args[0];

@@ -41,6 +41,19 @@ export interface FsSnapshot {
 
 // 游戏状态相关类型
 
+export enum GameActionType {
+  GO_HOME = 'GO_HOME',
+  GO_CATEGORY = 'GO_CATEGORY',
+  SELECT_CATEGORY = 'SELECT_CATEGORY',
+  SELECT_CHALLENGE = 'SELECT_CHALLENGE',
+  SUBMIT_RESULT = 'SUBMIT_RESULT',
+  SHOW_HINT = 'SHOW_HINT',
+  NEXT_CHALLENGE = 'NEXT_CHALLENGE',
+  RESET_CHALLENGE = 'RESET_CHALLENGE',
+  RETRY_CHALLENGE = 'RETRY_CHALLENGE',
+  GO_CHALLENGE_LIST = 'GO_CHALLENGE_LIST',
+}
+
 export type Screen = 'welcome' | 'category' | 'challenge-select' | 'challenge' | 'result';
 
 export interface ChallengeScore {
@@ -66,13 +79,13 @@ export interface GameState {
 }
 
 export type GameAction =
-  | { type: 'GO_HOME' }
-  | { type: 'GO_CATEGORY' }
-  | { type: 'SELECT_CATEGORY'; category: import('./challenge').ChallengeCategory }
-  | { type: 'SELECT_CHALLENGE'; index: number }
-  | { type: 'SUBMIT_RESULT'; correct: boolean; message: string; stdout: string; stderr: string }
-  | { type: 'SHOW_HINT' }
-  | { type: 'NEXT_CHALLENGE' }
-  | { type: 'RESET_CHALLENGE' }
-  | { type: 'RETRY_CHALLENGE' }
-  | { type: 'GO_CHALLENGE_LIST' };
+  | { type: GameActionType.GO_HOME }
+  | { type: GameActionType.GO_CATEGORY }
+  | { type: GameActionType.SELECT_CATEGORY; category: import('./challenge').ChallengeCategory }
+  | { type: GameActionType.SELECT_CHALLENGE; index: number }
+  | { type: GameActionType.SUBMIT_RESULT; correct: boolean; message: string; stdout: string; stderr: string }
+  | { type: GameActionType.SHOW_HINT }
+  | { type: GameActionType.NEXT_CHALLENGE }
+  | { type: GameActionType.RESET_CHALLENGE }
+  | { type: GameActionType.RETRY_CHALLENGE }
+  | { type: GameActionType.GO_CHALLENGE_LIST };

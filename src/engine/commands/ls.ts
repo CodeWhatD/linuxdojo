@@ -1,5 +1,5 @@
 import { CommandResult, ParsedCommand, VirtualFS } from '../../types/index.js';
-import { listDir, resolvePath } from '../filesystem.js';
+import { listDir } from '../filesystem.js';
 
 export function ls(fs: VirtualFS, parsed: ParsedCommand, _stdin?: string): CommandResult {
   const showAll = parsed.flags['a'] === true || parsed.flags['all'] === true;

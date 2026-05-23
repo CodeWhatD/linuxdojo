@@ -1,4 +1,4 @@
-import { Challenge, ChallengeValidation } from '../types/challenge.js';
+import { Challenge } from '../types/challenge.js';
 import { CommandResult } from '../types/index.js';
 
 export interface ValidationResult {

@@ -1,5 +1,5 @@
 import { CommandResult, ParsedCommand, VirtualFS } from '../../types/index.js';
-import { find as fsFind, resolvePath } from '../filesystem.js';
+import { find as fsFind } from '../filesystem.js';
 
 export function find(fs: VirtualFS, parsed: ParsedCommand): CommandResult {
   const args = parsed.args;
