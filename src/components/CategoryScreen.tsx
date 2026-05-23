@@ -8,12 +8,17 @@ import { useLocale } from '../i18n/LocaleContext.js';
 
 export function CategoryScreen() {
   const { state, dispatch } = useGame();
-  const { t } = useLocale();
+  const { t, toggleLocale } = useLocale();
   const [input, setInput] = useState('');
 
   const handleSubmit = useCallback((value: string) => {
-    const trimmed = value.trim();
+    const trimmed = value.trim().toLowerCase();
     setInput('');
+
+    if (trimmed === ':lang' || trimmed === ':l') {
+      toggleLocale();
+      return;
+    }
 
     const num = parseInt(trimmed, 10);
     if (num >= 1 && num <= categories.length) {

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Box, Text, useInput } from 'ink';
+import { Box, Text } from 'ink';
 import TextInput from 'ink-text-input';
 import { useGame } from '../state/GameContext.js';
 import { GameActionType } from '../types/index.js';
@@ -14,16 +14,14 @@ export function WelcomeScreen() {
   const handleSubmit = useCallback((value: string) => {
     const trimmed = value.trim().toLowerCase();
     setInput('');
+    if (trimmed === ':lang' || trimmed === ':l') {
+      toggleLocale();
+      return;
+    }
     if (trimmed === '' || trimmed === 'start' || trimmed === 's') {
       dispatch({ type: GameActionType.GO_CATEGORY });
     }
-  }, [dispatch]);
-
-  useInput((ch, _key) => {
-    if ((ch === 'l' || ch === 'L') && input === '') {
-      toggleLocale();
-    }
-  });
+  }, [dispatch, toggleLocale]);
 
   const langLabel = locale === 'zh' ? '中文' : 'English';
 
@@ -66,7 +64,7 @@ export function WelcomeScreen() {
       </Box>
 
       <Box marginTop={1}>
-        <Text dimColor>{t('welcome.langHint', { lang: langLabel })}</Text>
+        <Text dimColor>:lang ({langLabel})</Text>
       </Box>
     </Box>
   );
