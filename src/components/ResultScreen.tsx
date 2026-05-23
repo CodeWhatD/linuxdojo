@@ -3,15 +3,12 @@ import { Box, Text, useInput } from 'ink';
 import { useGame } from '../state/GameContext.js';
 import { getChallengesByCategory } from '../challenges/index.js';
 import { GameActionType } from '../types/index.js';
-
-const OPTIONS = [
-  { key: 'next', label: '选择下一关' },
-  { key: 'retry', label: '重玩本关' },
-  { key: 'back', label: '返回类别选择' },
-] as const;
+import { useLocale } from '../i18n/LocaleContext.js';
+import { getChallengeText } from '../i18n/index.js';
 
 export function ResultScreen() {
   const { state, dispatch } = useGame();
+  const { t } = useLocale();
   const [selected, setSelected] = useState(0);
 
   if (!state.selectedCategory) return null;
@@ -23,14 +20,21 @@ export function ResultScreen() {
   const score = state.scores.get(challenge.id);
   const stars = score?.stars ?? 1;
   const starStr = '★'.repeat(stars) + '☆'.repeat(3 - stars);
+  const chTitle = getChallengeText(challenge.id, 'title', challenge.title);
+
+  const options = [
+    { key: 'next', label: t('result.nextChallenge') },
+    { key: 'retry', label: t('result.retryChallenge') },
+    { key: 'back', label: t('result.backToCategory') },
+  ] as const;
 
   useInput((_, key) => {
     if (key.upArrow) {
       setSelected(prev => (prev > 0 ? prev - 1 : prev));
     } else if (key.downArrow) {
-      setSelected(prev => (prev < OPTIONS.length - 1 ? prev + 1 : prev));
+      setSelected(prev => (prev < options.length - 1 ? prev + 1 : prev));
     } else if (key.return) {
-      const action = OPTIONS[selected].key;
+      const action = options[selected].key;
       if (action === 'next') {
         dispatch({ type: GameActionType.NEXT_CHALLENGE });
       } else if (action === 'retry') {
@@ -44,13 +48,13 @@ export function ResultScreen() {
   return (
     <Box flexDirection="column" alignItems="center">
       <Box flexDirection="column" borderStyle="round" borderColor="green" paddingX={2}>
-        <Text bold>{challenge.title}</Text>
-        <Text>评价: <Text color="yellow">{starStr}</Text></Text>
-        <Text dimColor>尝试: {state.attempts} 次 | 提示: {state.hintIndex} 次</Text>
+        <Text bold>{chTitle}</Text>
+        <Text>{t('result.rating')}: <Text color="yellow">{starStr}</Text></Text>
+        <Text dimColor>{t('result.attempts')}: {state.attempts} | {t('result.hints')}: {state.hintIndex}</Text>
       </Box>
 
       <Box marginTop={1} flexDirection="column">
-        {OPTIONS.map((opt, i) => (
+        {options.map((opt, i) => (
           <Text key={opt.key}>
             <Text color={i === selected ? 'cyan' : undefined}>
               {i === selected ? '> ' : '  '}{opt.label}

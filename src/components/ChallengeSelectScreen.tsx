@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { Box, Text, useInput } from 'ink';
 import { useGame } from '../state/GameContext.js';
 import { getChallengesByCategory } from '../challenges/index.js';
-import { CATEGORY_META } from '../types/challenge.js';
 import { GameActionType } from '../types/index.js';
+import { useLocale } from '../i18n/LocaleContext.js';
+import { getChallengeText } from '../i18n/index.js';
 
 export function ChallengeSelectScreen() {
   const { state, dispatch } = useGame();
+  const { t } = useLocale();
 
   if (!state.selectedCategory) return null;
 
   const challenges = getChallengesByCategory(state.selectedCategory);
-  const meta = CATEGORY_META[state.selectedCategory];
   const [selectedIndex, setSelectedIndex] = useState(
     Math.min(state.currentChallengeIndex, challenges.length - 1),
   );
@@ -32,9 +33,9 @@ export function ChallengeSelectScreen() {
     <Box flexDirection="column">
       <Box borderStyle="single" borderColor="gray" paddingX={1}>
         <Text>
-          <Text color="cyan" bold>{meta.label}</Text>
+          <Text color="cyan" bold>{t('categories.' + state.selectedCategory)}</Text>
           <Text dimColor> | </Text>
-          <Text>选择关卡</Text>
+          <Text>{t('challengeSelect.title')}</Text>
         </Text>
       </Box>
 
@@ -47,12 +48,13 @@ export function ChallengeSelectScreen() {
           const prefix = isSelected ? '>' : ' ';
           const stars = score ? '★'.repeat(score.stars) + '☆'.repeat(3 - score.stars) : '';
           const statusIcon = isCompleted ? <Text color="green">✓</Text> : <Text dimColor>○</Text>;
+          const title = getChallengeText(ch.id, 'title', ch.title);
 
           return (
             <Text key={ch.id}>
               <Text color={isSelected ? 'cyan' : undefined}>{prefix} </Text>
               {statusIcon}{' '}
-              <Text color={isSelected ? 'cyan' : undefined}>{i + 1}. {ch.title}</Text>
+              <Text color={isSelected ? 'cyan' : undefined}>{i + 1}. {title}</Text>
               {stars && <Text color="yellow"> {stars}</Text>}
             </Text>
           );
@@ -60,7 +62,7 @@ export function ChallengeSelectScreen() {
       </Box>
 
       <Box marginTop={1} paddingX={1}>
-        <Text dimColor>↑↓ 选择 | Enter 开始 | Esc 返回</Text>
+        <Text dimColor>{t('challengeSelect.navHint')}</Text>
       </Box>
     </Box>
   );

@@ -1,18 +1,18 @@
 export interface BuiltinCommand {
   cmd: string;
   alias: string;
-  desc: string;
+  descKey: string;
 }
 
 export const CHALLENGE_COMMANDS: BuiltinCommand[] = [
-  { cmd: ':hint', alias: ':h', desc: '查看提示' },
-  { cmd: ':reset', alias: ':r', desc: '重置关卡' },
-  { cmd: ':back', alias: ':b', desc: '返回' },
+  { cmd: ':hint', alias: ':h', descKey: 'commands.hint' },
+  { cmd: ':reset', alias: ':r', descKey: 'commands.reset' },
+  { cmd: ':back', alias: ':b', descKey: 'commands.back' },
 ];
 
 export const RESULT_COMMANDS: BuiltinCommand[] = [
-  { cmd: ':retry', alias: ':r', desc: '重玩本关' },
-  { cmd: ':back', alias: ':b', desc: '返回类别选择' },
+  { cmd: ':retry', alias: ':r', descKey: 'commands.retry' },
+  { cmd: ':back', alias: ':b', descKey: 'commands.backToCategory' },
 ];
 
 export function filterCommands(commands: BuiltinCommand[], input: string): BuiltinCommand[] {

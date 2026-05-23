@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Text } from 'ink';
 import { BuiltinCommand } from '../utils/builtin-commands.js';
+import { t } from '../i18n/index.js';
 
 interface Props {
   commands: BuiltinCommand[];
@@ -23,7 +24,7 @@ export function CommandSuggestion({ commands, input }: Props) {
         <Text key={c.cmd} dimColor>
           <Text color="cyan">{c.cmd}</Text>
           <Text dimColor> ({c.alias})</Text>
-          <Text dimColor> — {c.desc}</Text>
+          <Text dimColor> — {t(c.descKey)}</Text>
         </Text>
       ))}
     </Box>

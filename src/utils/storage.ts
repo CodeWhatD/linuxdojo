@@ -9,6 +9,7 @@ export interface SaveEntry {
 
 export interface SaveData {
   completedChallenges: Record<string, SaveEntry>;
+  locale?: string;
 }
 
 export const SAVE_FILE_NAME = '.learn-linux-save.json';

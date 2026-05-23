@@ -1,12 +1,14 @@
 import React, { useState, useCallback } from 'react';
-import { Box, Text } from 'ink';
+import { Box, Text, useInput } from 'ink';
 import TextInput from 'ink-text-input';
 import { useGame } from '../state/GameContext.js';
 import { GameActionType } from '../types/index.js';
 import { getSaveFilePath } from '../utils/storage.js';
+import { useLocale } from '../i18n/LocaleContext.js';
 
 export function WelcomeScreen() {
   const { dispatch } = useGame();
+  const { t, locale, toggleLocale } = useLocale();
   const [input, setInput] = useState('');
 
   const handleSubmit = useCallback((value: string) => {
@@ -17,42 +19,54 @@ export function WelcomeScreen() {
     }
   }, [dispatch]);
 
+  useInput((ch, _key) => {
+    if ((ch === 'l' || ch === 'L') && input === '') {
+      toggleLocale();
+    }
+  });
+
+  const langLabel = locale === 'zh' ? '中文' : 'English';
+
   return (
     <Box flexDirection="column" alignItems="center">
       <Box marginBottom={1}>
         <Text color="cyan" bold>
-          ╔══════════════════════════════════════╗
+          ╔══════════════════════════════════════════╗
         </Text>
       </Box>
       <Box>
         <Text color="cyan" bold>║</Text>
-        <Text color="green" bold>     Learn Linux - 命令学习工具      </Text>
+        <Text color="green" bold>  {t('welcome.title').padEnd(40)}  </Text>
         <Text color="cyan" bold>║</Text>
       </Box>
       <Box marginBottom={1}>
         <Text color="cyan" bold>
-          ╚══════════════════════════════════════╝
+          ╚══════════════════════════════════════════╝
         </Text>
       </Box>
 
       <Box marginBottom={1}>
-        <Text dimColor>通过闯关模式，掌握 Linux 常用命令</Text>
+        <Text dimColor>{t('welcome.subtitle')}</Text>
       </Box>
 
       <Box flexDirection="column">
-        <Text>按 <Text color="yellow">Enter</Text> 开始学习</Text>
+        <Text>{t('welcome.startPrompt', { key: 'Enter' })}</Text>
       </Box>
 
       <Box marginTop={1}>
-        <Text dimColor>存档文件: {getSaveFilePath()}</Text>
+        <Text dimColor>{t('welcome.saveFile', { path: getSaveFilePath() })}</Text>
       </Box>
       <Box>
-        <Text dimColor>(请勿手动修改存档文件)</Text>
+        <Text dimColor>{t('welcome.dontModify')}</Text>
       </Box>
 
       <Box marginTop={1}>
         <Text color="green">{'>'} </Text>
-        <TextInput value={input} onChange={setInput} onSubmit={handleSubmit} placeholder="按 Enter 开始" />
+        <TextInput value={input} onChange={setInput} onSubmit={handleSubmit} placeholder={t('welcome.placeholder')} />
+      </Box>
+
+      <Box marginTop={1}>
+        <Text dimColor>{t('welcome.langHint', { lang: langLabel })}</Text>
       </Box>
     </Box>
   );

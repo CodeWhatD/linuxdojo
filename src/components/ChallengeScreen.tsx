@@ -2,7 +2,6 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { Box, Text } from 'ink';
 import { useGame } from '../state/GameContext.js';
 import { getChallengesByCategory } from '../challenges/index.js';
-import { CATEGORY_META } from '../types/challenge.js';
 import { GameActionType } from '../types/index.js';
 import { execute } from '../engine/executor.js';
 import { validateChallenge } from '../engine/validator.js';
@@ -11,9 +10,12 @@ import { CommandSuggestion } from './CommandSuggestion.js';
 import { CHALLENGE_COMMANDS } from '../utils/builtin-commands.js';
 import { getAllCommands } from '../engine/commands/index.js';
 import { CustomTextInput } from './CustomTextInput.js';
+import { useLocale } from '../i18n/LocaleContext.js';
+import { getChallengeText, getChallengeHints } from '../i18n/index.js';
 
 export function ChallengeScreen() {
   const { state, dispatch } = useGame();
+  const { t } = useLocale();
   const [input, setInput] = useState('');
   const [outputLines, setOutputLines] = useState<string[]>([]);
 
@@ -29,8 +31,10 @@ export function ChallengeScreen() {
 
   if (!state.selectedCategory || !challenge) return null;
 
-  const meta = CATEGORY_META[state.selectedCategory];
   const progress = `${state.currentChallengeIndex + 1}/${challenges.length}`;
+  const chTitle = getChallengeText(challenge.id, 'title', challenge.title);
+  const chDesc = getChallengeText(challenge.id, 'description', challenge.description);
+  const chHints = getChallengeHints(challenge.id, challenge.hints);
 
   const handleSubmit = useCallback((value: string) => {
     const trimmed = value.trim();
@@ -39,7 +43,7 @@ export function ChallengeScreen() {
     setInput('');
 
     if (trimmed === ':hint' || trimmed === ':h') {
-      if (state.hintIndex < challenge.hints.length) {
+      if (state.hintIndex < chHints.length) {
         dispatch({ type: GameActionType.SHOW_HINT });
       }
       return;
@@ -72,40 +76,40 @@ export function ChallengeScreen() {
       stdout: result.stdout,
       stderr: result.stderr,
     });
-  }, [challenge, dispatch, state.hintIndex]);
+  }, [challenge, dispatch, state.hintIndex, chHints.length]);
 
-  const visibleHints = challenge.hints.slice(0, state.hintIndex);
+  const visibleHints = chHints.slice(0, state.hintIndex);
 
   return (
     <Box flexDirection="column">
       {/* Header */}
       <Box borderStyle="single" borderColor="gray" paddingX={1}>
         <Text>
-          <Text color="cyan" bold>{meta.label}</Text>
+          <Text color="cyan" bold>{t('categories.' + state.selectedCategory)}</Text>
           <Text dimColor> | </Text>
-          <Text>关卡 {progress}</Text>
+          <Text>{t('challenge.headerProgress', { progress })}</Text>
           <Text dimColor> | </Text>
-          <Text bold>{challenge.title}</Text>
+          <Text bold>{chTitle}</Text>
         </Text>
       </Box>
 
       {/* Description */}
       <Box marginTop={1} paddingX={1}>
-        <Text>{challenge.description}</Text>
+        <Text>{chDesc}</Text>
       </Box>
 
       {/* Hints */}
       {visibleHints.length > 0 && (
         <Box flexDirection="column" paddingX={1}>
           {visibleHints.map((hint, i) => (
-            <Text key={i} color="yellow">提示: {hint}</Text>
+            <Text key={i} color="yellow">{t('challenge.hintLabel')}: {hint}</Text>
           ))}
         </Box>
       )}
 
-      {state.hintIndex < challenge.hints.length && (
+      {state.hintIndex < chHints.length && (
         <Box paddingX={1}>
-          <Text dimColor>输入 :hint 查看提示 ({challenge.hints.length - state.hintIndex} 个可用)</Text>
+          <Text dimColor>{t('challenge.hintsAvailable', { count: chHints.length - state.hintIndex })}</Text>
         </Box>
       )}
 
@@ -140,7 +144,7 @@ export function ChallengeScreen() {
 
       {/* Footer */}
       <Box marginTop={1} paddingX={1}>
-        <Text dimColor>您可以使用 : 查看内置命令帮助</Text>
+        <Text dimColor>{t('challenge.footer')}</Text>
       </Box>
     </Box>
   );

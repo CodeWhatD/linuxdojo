@@ -3,11 +3,12 @@ import { Box, Text } from 'ink';
 import TextInput from 'ink-text-input';
 import { useGame } from '../state/GameContext.js';
 import { categories, getChallengesByCategory } from '../challenges/index.js';
-import { CATEGORY_META } from '../types/challenge.js';
 import { GameActionType } from '../types/index.js';
+import { useLocale } from '../i18n/LocaleContext.js';
 
 export function CategoryScreen() {
   const { state, dispatch } = useGame();
+  const { t } = useLocale();
   const [input, setInput] = useState('');
 
   const handleSubmit = useCallback((value: string) => {
@@ -23,11 +24,10 @@ export function CategoryScreen() {
   return (
     <Box flexDirection="column">
       <Box marginBottom={1}>
-        <Text color="cyan" bold>选择学习类别</Text>
+        <Text color="cyan" bold>{t('category.title')}</Text>
       </Box>
 
       {categories.map((cat, i) => {
-        const meta = CATEGORY_META[cat];
         const challenges = getChallengesByCategory(cat);
         const completed = challenges.filter(c => state.completedChallenges.has(c.id)).length;
         const total = challenges.length;
@@ -36,8 +36,8 @@ export function CategoryScreen() {
           <Box key={cat}>
             <Text>
               <Text color="yellow">[{i + 1}]</Text>{' '}
-              <Text bold>{meta.label}</Text>
-              <Text dimColor> ({completed}/{total} 完成)</Text>
+              <Text bold>{t('categories.' + cat)}</Text>
+              <Text dimColor> ({t('category.completed', { done: completed, total })})</Text>
             </Text>
           </Box>
         );
@@ -49,7 +49,7 @@ export function CategoryScreen() {
           value={input}
           onChange={setInput}
           onSubmit={handleSubmit}
-          placeholder="输入编号选择类别"
+          placeholder={t('category.inputPlaceholder')}
         />
       </Box>
     </Box>

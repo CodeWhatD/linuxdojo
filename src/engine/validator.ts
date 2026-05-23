@@ -1,5 +1,6 @@
 import { Challenge } from '../types/challenge.js';
 import { CommandResult } from '../types/index.js';
+import { t } from '../i18n/index.js';
 
 export interface ValidationResult {
   correct: boolean;
@@ -45,7 +46,7 @@ export function validateChallenge(
       cmd => normalizeCommand(cmd) === normalized,
     );
     if (match) {
-      return { correct: true, message: '正确!' };
+      return { correct: true, message: t('validation.correct') };
     }
   }
 
@@ -53,7 +54,7 @@ export function validateChallenge(
   if (v.expectedOutputPattern) {
     const regex = new RegExp(v.expectedOutputPattern);
     if (regex.test(commandResult.stdout)) {
-      return { correct: true, message: '正确!' };
+      return { correct: true, message: t('validation.correct') };
     }
   }
 
@@ -62,5 +63,5 @@ export function validateChallenge(
     return { correct: false, message: commandResult.stderr };
   }
 
-  return { correct: false, message: '不太对，再试试看。输入 h 查看提示。' };
+  return { correct: false, message: t('validation.tryAgain') };
 }
